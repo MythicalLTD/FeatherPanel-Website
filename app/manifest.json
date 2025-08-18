@@ -1,0 +1,32 @@
+{
+  "name": "FeatherPanel - Light as a Feather Game Server Management Panel",
+  "short_name": "FeatherPanel",
+  "description": "Revolutionary game server management panel that's light as a feather. Compatible with Pterodactyl Wings, built for speed and customization.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+    "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "developer"],
+  "lang": "en",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}
