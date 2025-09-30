@@ -64,6 +64,27 @@ export function FAQSection() {
               FeatherPanel features a native plugin system that allows you to extend functionality without modifying core code. Plugins can add new features, customize the interface, and integrate with external services.
             </AccordionContent>
           </AccordionItem>
+          <AccordionItem value="item-7">
+            <AccordionTrigger>Can I use Pterodactyl nests and eggs on FeatherPanel?</AccordionTrigger>
+            <AccordionContent>
+              Yes! FeatherPanel uses the same structure as Pterodactyl for <strong>nests</strong> and <strong>eggs</strong>. 
+              You can cross-use your existing eggs and nests between FeatherPanel and Pterodactyl without any conversion. 
+              This makes migration and interoperability <em>light as a feather</em> for all your game server configurations.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-8">
+            <AccordionTrigger>Where can I find spells (eggs) for FeatherPanel?</AccordionTrigger>
+            <AccordionContent>
+              No worries! You can find spells (eggs) directly inside the panel via the <strong>Spells Online Repository</strong> page. 
+              Simply browse and download any egg (spell) you want to use, all from within FeatherPanel—no manual searching required.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-9">
+            <AccordionTrigger>What about WHMCS, Paymenter, and other addons?</AccordionTrigger>
+            <AccordionContent>
+              Don&#39;t worry! We have developed a dedicated plugin to support Pterodactyl&#39;s panel old API inside FeatherPanel. This means you can use existing integrations like <strong>WHMCS</strong>, <strong>Paymenter</strong>, and other popular addons seamlessly. Just head over to the <strong>Plugins</strong> section in FeatherPanel, choose our <strong>Online Repository</strong>, and click <strong>Install</strong> on the compatibility plugin. You&#39;ll be up and running in no time!
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </div>
     </section>

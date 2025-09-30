@@ -1,8 +1,10 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { Monitor, Smartphone, Zap, Shield } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Monitor, Smartphone, Zap, Shield, Terminal, Plug, UserCog, Wand2, User, X, ChevronLeft, ChevronRight, Folder } from "lucide-react";
 
 export function PanelPreview() {
   return (
@@ -18,125 +20,88 @@ export function PanelPreview() {
       </div>
 
       <div className="max-w-6xl mx-auto">
-        <Tabs defaultValue="panel1" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="panel1" className="flex items-center space-x-2">
-              <Monitor className="w-4 h-4" />
-              <span>Server Management</span>
-            </TabsTrigger>
-            <TabsTrigger value="panel2" className="flex items-center space-x-2">
-              <Smartphone className="w-4 h-4" />
-              <span>Dashboard Overview</span>
-            </TabsTrigger>
-          </TabsList>
+        {(() => {
+          const items = [
+            { src: "/demo/panel1.png", title: "Dashboard Overview", Icon: Smartphone },
+            { src: "/demo/panel2.png", title: "Server Management & Console", Icon: Monitor },
+            { src: "/demo/panel3.png", title: "Plugin Manager", Icon: Plug },
+            { src: "/demo/panel4.png", title: "Roles & Permissions", Icon: UserCog },
+            { src: "/demo/panel5.png", title: "Spells Repository", Icon: Wand2 },
+            { src: "/demo/panel6.png", title: "Account & Customization", Icon: User },
+            { src: "/demo/panel7.png", title: "System Wide File Manager", Icon: Folder },
+          ];
 
-          <TabsContent value="panel1" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Monitor className="w-5 h-5" />
-                      <span>Server Management Interface</span>
-                    </CardTitle>
-                    <CardDescription>
-                      Powerful <strong>Pterodactyl Wings</strong> compatible server controls with feather-light performance
-                    </CardDescription>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Badge variant="secondary" className="flex items-center space-x-1">
-                      <Zap className="w-3 h-3" />
-                      <span>Lightning Fast</span>
-                    </Badge>
-                    <Badge variant="outline" className="flex items-center space-x-1">
-                      <Shield className="w-3 h-3" />
-                      <span>Secure</span>
-                    </Badge>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-lg border overflow-hidden bg-muted/50">
-                  <Image
-                    src="/demo/panel2.png"
-                    alt="FeatherPanel Server Management Interface - Pterodactyl Wings Compatible Game Server Control Panel"
-                    width={1200}
-                    height={800}
-                    className="w-full h-auto"
-                    priority
-                  />
-                </div>
-                <div className="mt-4 grid md:grid-cols-3 gap-4 text-sm">
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Real-time server monitoring</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Wings compatibility layer</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span>Native plugin support</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+          function Gallery() {
+            const [index, setIndex] = useState<number | null>(null);
+            const open = useCallback((i: number) => setIndex(i), []);
+            const close = useCallback(() => setIndex(null), []);
+            const prev = useCallback(() => setIndex((i) => (i === null ? i : (i + items.length - 1) % items.length)), []);
+            const next = useCallback(() => setIndex((i) => (i === null ? i : (i + 1) % items.length)), []);
 
-          <TabsContent value="panel2" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Smartphone className="w-5 h-5" />
-                      <span>Dashboard Overview</span>
-                    </CardTitle>
-                    <CardDescription>
-                      Clean, intuitive dashboard for managing <strong>Minecraft servers</strong> and <strong>game hosting</strong> infrastructure
-                    </CardDescription>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Badge variant="secondary" className="flex items-center space-x-1">
-                      <Monitor className="w-3 h-3" />
-                      <span>Responsive</span>
-                    </Badge>
-                    <Badge variant="outline" className="flex items-center space-x-1">
-                      <Zap className="w-3 h-3" />
-                      <span>204x Lighter</span>
-                    </Badge>
-                  </div>
+            useEffect(() => {
+              if (index === null) return;
+              const onKey = (e: KeyboardEvent) => {
+                if (e.key === "Escape") close();
+                if (e.key === "ArrowLeft") prev();
+                if (e.key === "ArrowRight") next();
+              };
+              window.addEventListener("keydown", onKey);
+              return () => window.removeEventListener("keydown", onKey);
+            }, [index, close, prev, next]);
+
+            return (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {items.map((item, i) => (
+                    <Card key={item.src} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={() => open(i)}>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center space-x-2 text-base">
+                          <item.Icon className="w-4 h-4" />
+                          <span>{item.title}</span>
+                        </CardTitle>
+                        <CardDescription>Click to preview</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="rounded-lg border overflow-hidden bg-muted/50">
+                          <Image src={item.src} alt={item.title} width={1200} height={800} className="w-full h-auto" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-lg border overflow-hidden bg-muted/50">
-                  <Image
-                    src="/demo/panel1.png"
-                    alt="FeatherPanel Dashboard Overview - Lightweight Game Server Management Panel for Minecraft and Discord Bots"
-                    width={1200}
-                    height={800}
-                    className="w-full h-auto"
-                  />
-                </div>
-                <div className="mt-4 grid md:grid-cols-3 gap-4 text-sm">
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                    <span>Comprehensive analytics</span>
+
+                {index !== null && (
+                  <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center" role="dialog" aria-modal="true">
+                    <button aria-label="Close" className="absolute top-4 right-4 text-white/80 hover:text-white" onClick={close}>
+                      <X className="w-6 h-6" />
+                    </button>
+                    <button aria-label="Previous" className="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white" onClick={prev}>
+                      <ChevronLeft className="w-8 h-8" />
+                    </button>
+                    <button aria-label="Next" className="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white" onClick={next}>
+                      <ChevronRight className="w-8 h-8" />
+                    </button>
+                    <div className="max-w-6xl w-full px-6">
+                      <div className="rounded-lg overflow-hidden">
+                        <Image src={items[index].src} alt={items[index].title} width={1600} height={1000} className="w-full h-auto" priority />
+                      </div>
+                      <div className="mt-3 text-center text-white/90 text-sm flex items-center justify-center space-x-2">
+                        {(() => {
+                          const ActiveIcon = items[index].Icon;
+                          return <ActiveIcon className="w-4 h-4" />;
+                        })()}
+                        <span>{items[index].title}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <span>Resource optimization</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                    <span>Multi-server management</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                )}
+              </>
+            );
+          }
+
+          return <Gallery />;
+        })()}
+      </div>
 
         <div className="mt-12 text-center">
           <p className="text-muted-foreground mb-6">
@@ -157,7 +122,6 @@ export function PanelPreview() {
             </div>
           </div>
         </div>
-      </div>
     </section>
   );
 }

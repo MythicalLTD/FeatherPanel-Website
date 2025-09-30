@@ -4,7 +4,7 @@ import { Shield, Lock, Eye, Key, AlertTriangle, FileCheck } from "lucide-react";
 
 export function SecuritySection() {
   return (
-    <section id="security" className="container mx-auto px-6 py-24 bg-muted/50">
+    <section id="security" className="container mx-auto px-6 py-24">
       <div className="text-center mb-16">
         <Badge variant="outline" className="mb-4">Security First</Badge>
         <h2 className="text-3xl font-bold mb-4">Enterprise-grade security</h2>

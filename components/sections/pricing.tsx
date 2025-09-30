@@ -44,7 +44,10 @@ export function PricingSection() {
                 <span className="text-sm">Native plugin support</span>
               </li>
             </ul>
-            <Button variant="outline" className="w-full">Download</Button>
+            
+            <a href="https://docs.mythical.systems" className="w-full">
+              <Button variant="outline" className="w-full">Download</Button>
+            </a>
           </CardContent>
         </Card>
 
@@ -83,7 +86,11 @@ export function PricingSection() {
                 <span className="text-sm">Premium plugins</span>
               </li>
             </ul>
-            <Button className="w-full">Start Free Trial</Button>
+            <a href="https://cloud.mythical.systems" className="w-full">
+              <Button className="w-full" asChild>
+                <span>Start Free Trial</span>
+              </Button>
+            </a>
           </CardContent>
         </Card>
 
@@ -117,7 +124,11 @@ export function PricingSection() {
                 <span className="text-sm">24/7 monitoring</span>
               </li>
             </ul>
-            <Button variant="outline" className="w-full">Get Started</Button>
+            <a href="https://cloud.mythical.systems" className="w-full">
+              <Button className="w-full" asChild>
+                <span>Get Started</span>
+              </Button>
+            </a>
           </CardContent>
         </Card>
       </div>
