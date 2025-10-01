@@ -8,6 +8,7 @@ import { PricingSection } from "@/components/sections/pricing";
 import { InstallationSection } from "@/components/sections/installation";
 import { FAQSection } from "@/components/sections/faq";
 import { Footer } from "@/components/sections/footer";
+import { ComparisonCharts } from "@/components/sections/compare";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <Navigation />
       <HeroSection />
       <PanelPreview />
+      <ComparisonCharts />
       <StatsSection />
       <FeaturesSection />
       <SecuritySection />
