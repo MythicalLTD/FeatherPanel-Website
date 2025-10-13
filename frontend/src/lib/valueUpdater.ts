@@ -1,3 +1,4 @@
+/*
 MIT License
 
 Copyright (c) 2025 MythicalSystems
@@ -21,3 +22,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
+
+import type { Updater } from '@tanstack/vue-table';
+import type { ClassValue } from 'clsx';
+
+import type { Ref } from 'vue';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
+export function valueUpdater<T extends Updater<unknown>>(updaterOrValue: T, ref: Ref<unknown>) {
+    ref.value = typeof updaterOrValue === 'function' ? updaterOrValue(ref.value) : updaterOrValue;
+}

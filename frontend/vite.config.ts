@@ -1,3 +1,4 @@
+/*
 MIT License
 
 Copyright (c) 2025 MythicalSystems
@@ -21,3 +22,48 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
+
+import { fileURLToPath, URL } from 'node:url';
+
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import vueDevTools from 'vite-plugin-vue-devtools';
+import tailwindcss from '@tailwindcss/vite';
+
+// https://vite.dev/config/
+export default defineConfig({
+    plugins: [
+        vue(),
+        vueDevTools(),
+        tailwindcss(),
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
+    },
+    server: {
+        host: '0.0.0.0',
+        strictPort: true,
+        allowedHosts: ['localhost', '127.0.0.1', '0.0.0.0', 'devsv.mythical.systems'],
+        proxy: {
+            '/api': {
+                target: 'http://localhost:9721',
+                changeOrigin: true,
+                secure: false,
+                rewrite: (path) => path,
+            }
+        },
+    },
+    build: {
+        minify: true,
+        sourcemap: true,
+        assetsInlineLimit: 0,
+        chunkSizeWarningLimit: 120000,
+    },
+    optimizeDeps: {
+        include: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
+    },
+    cacheDir: '.vite',
+});

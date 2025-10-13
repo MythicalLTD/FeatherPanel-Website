@@ -1,3 +1,4 @@
+/*
 MIT License
 
 Copyright (c) 2025 MythicalSystems
@@ -21,3 +22,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
+
+import type { RouteRecordRaw } from 'vue-router';
+
+const homeRoutes: RouteRecordRaw[] = [
+    {
+        path: '/',
+        name: 'home',
+        component: () => import('@/pages/home.vue'),
+    },
+];
+
+export default homeRoutes;
