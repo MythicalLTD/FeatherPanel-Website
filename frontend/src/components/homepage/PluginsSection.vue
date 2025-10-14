@@ -63,13 +63,19 @@
                 <div
                     v-for="(plugin, index) in plugins"
                     :key="plugin.id"
-                    class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 hover:border-white/20 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer group animate-slide-in-up"
-                    :class="`stagger-${(index % 6) + 1}`"
+                    class="p-6 rounded-2xl bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer group animate-slide-in-up"
+                    :class="[
+                        `stagger-${(index % 6) + 1}`,
+                        plugin.premium 
+                            ? 'border-2 border-yellow-500/30 hover:border-yellow-500/50 shadow-lg shadow-yellow-500/10' 
+                            : 'border border-white/10 hover:border-white/20'
+                    ]"
                 >
                     <!-- Plugin Header -->
                     <div class="flex items-start gap-4 mb-4">
                         <div
                             class="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden group-hover:scale-110 transition-transform duration-300"
+                            :class="{ 'ring-2 ring-yellow-500/50': plugin.premium }"
                         >
                             <img
                                 v-if="plugin.icon"
@@ -85,14 +91,24 @@
                                 <h3 class="text-lg font-semibold text-white truncate group-hover:text-blue-400 transition-colors">
                                     {{ plugin.name }}
                                 </h3>
-                                <CheckCircle2
-                                    v-if="plugin.verified"
-                                    class="w-5 h-5 text-blue-400 flex-shrink-0"
-                                    title="Verified Plugin"
-                                />
+                                <div class="flex items-center gap-1 flex-shrink-0">
+                                    <CheckCircle2
+                                        v-if="plugin.verified"
+                                        class="w-5 h-5 text-blue-400"
+                                        title="Verified Plugin"
+                                    />
+                                    <Crown
+                                        v-if="plugin.premium"
+                                        class="w-5 h-5 text-yellow-400"
+                                        title="Premium Plugin"
+                                    />
+                                </div>
                             </div>
                             <p class="text-sm text-gray-400 truncate">
                                 by {{ plugin.author }}
+                            </p>
+                            <p v-if="plugin.premium && plugin.premium_price" class="text-sm font-semibold text-yellow-400 mt-1">
+                                ${{ plugin.premium_price }}
                             </p>
                         </div>
                     </div>
@@ -103,43 +119,65 @@
                     </p>
 
                     <!-- Plugin Tags -->
-                    <div v-if="plugin.tags && plugin.tags.length > 0" class="flex flex-wrap gap-2 mb-4">
+                    <div class="flex flex-wrap gap-2 mb-4">
                         <span
-                            v-for="tag in plugin.tags.slice(0, 3)"
+                            v-if="plugin.premium"
+                            class="text-xs px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 font-semibold flex items-center gap-1"
+                        >
+                            <Crown class="w-3 h-3" />
+                            Premium
+                        </span>
+                        <span
+                            v-for="tag in plugin.tags.slice(0, plugin.premium ? 2 : 3)"
                             :key="tag"
                             class="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30"
                         >
                             {{ tag }}
                         </span>
                         <span
-                            v-if="plugin.tags.length > 3"
+                            v-if="plugin.tags.length > (plugin.premium ? 2 : 3)"
                             class="text-xs px-2 py-1 rounded-full bg-gray-500/20 text-gray-300 border border-gray-500/30"
                         >
-                            +{{ plugin.tags.length - 3 }}
+                            +{{ plugin.tags.length - (plugin.premium ? 2 : 3) }}
                         </span>
                     </div>
 
                     <!-- Plugin Stats -->
-                    <div class="flex items-center justify-between text-sm border-t border-white/10 pt-4">
-                        <div class="flex items-center gap-4">
-                            <div class="flex items-center gap-1 text-gray-400">
-                                <Download class="w-4 h-4" />
-                                <span>{{ formatDownloads(plugin.downloads) }}</span>
+                    <div class="border-t border-white/10 pt-4 space-y-3">
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-1 text-gray-400">
+                                    <Download class="w-4 h-4" />
+                                    <span>{{ formatDownloads(plugin.downloads) }}</span>
+                                </div>
+                                <div v-if="plugin.latest_version?.version" class="flex items-center gap-1 text-gray-400">
+                                    <Tag class="w-4 h-4" />
+                                    <span>{{ plugin.latest_version.version }}</span>
+                                </div>
                             </div>
-                            <div v-if="plugin.latest_version?.version" class="flex items-center gap-1 text-gray-400">
-                                <Tag class="w-4 h-4" />
-                                <span>{{ plugin.latest_version.version }}</span>
-                            </div>
+                            <a
+                                v-if="plugin.website && !plugin.premium"
+                                :href="plugin.website"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-blue-400 hover:text-blue-300 transition-colors"
+                                @click.stop
+                            >
+                                <ExternalLink class="w-4 h-4" />
+                            </a>
                         </div>
+
+                        <!-- Premium Plugin Purchase Button -->
                         <a
-                            v-if="plugin.website"
-                            :href="plugin.website"
+                            v-if="plugin.premium && plugin.premium_link"
+                            :href="plugin.premium_link"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-blue-400 hover:text-blue-300 transition-colors"
+                            class="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 hover:from-yellow-500/30 hover:to-orange-500/30 hover:border-yellow-500/50 transition-all duration-300 text-yellow-400 hover:text-yellow-300 font-semibold text-sm"
                             @click.stop
                         >
-                            <ExternalLink class="w-4 h-4" />
+                            <ShoppingCart class="w-4 h-4" />
+                            <span>Purchase Plugin</span>
                         </a>
                     </div>
                 </div>
@@ -206,6 +244,8 @@ import {
     AlertCircle,
     ChevronLeft,
     ChevronRight,
+    Crown,
+    ShoppingCart,
 } from 'lucide-vue-next';
 
 const plugins = ref([]);

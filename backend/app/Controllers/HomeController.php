@@ -106,6 +106,10 @@ class HomeController
                     'downloads' => $pkg['downloads'] ?? 0,
                     'created_at' => $pkg['created_at'] ?? null,
                     'updated_at' => $pkg['updated_at'] ?? null,
+                    // Premium
+                    'premium' => isset($pkg['premium']) ? (int) $pkg['premium'] === 1 : false,
+                    'premium_link' => $pkg['premium_link'] ?? null,
+                    'premium_price' => $pkg['premium_price'] ?? null,
                     // Latest version
                     'latest_version' => [
                         'version' => $latest['version'] ?? null,
