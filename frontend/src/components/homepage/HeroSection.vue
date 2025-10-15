@@ -81,12 +81,64 @@
                     Watch Demo
                 </button>
             </div>
+
+            <!-- Demo choice modal -->
+            <transition name="fade">
+                <div v-if="isDemoChoiceOpen" class="fixed inset-0 z-50 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="closeDemoChoice"></div>
+                    <div class="relative z-10 w-full max-w-md mx-auto rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900/90 to-slate-800/90 p-6 shadow-2xl modal-panel">
+                        <!-- Decorative animated background inside modal -->
+                        <div class="modal-decor pointer-events-none" aria-hidden="true">
+                            <div class="modal-gradient"></div>
+                            <div class="modal-glow glow-1"></div>
+                            <div class="modal-glow glow-2"></div>
+                            <div class="modal-grid"></div>
+                        </div>
+                        <div class="flex items-start gap-3 mb-4">
+                            <Sparkles class="w-5 h-5 text-blue-400 mt-1" />
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">How would you like to explore?</h3>
+                                <p class="text-sm text-gray-400">Pick your vibe: quick video walkthrough or static screenshots.</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button
+                                class="w-full inline-flex items-center justify-between gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all"
+                                @click="openVideoDemo"
+                            >
+                                <span class="inline-flex items-center gap-2">
+                                    <Play class="w-5 h-5" />
+                                    Watch video (install + panel tour)
+                                </span>
+                                <ArrowRight class="w-4 h-4" />
+                            </button>
+
+                            <button
+                                class="w-full inline-flex items-center justify-between gap-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all"
+                                @click="viewScreenshots"
+                            >
+                                <span class="inline-flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    See screenshots
+                                </span>
+                                <ArrowRight class="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <button class="mt-4 w-full text-sm text-gray-400 hover:text-gray-300" @click="closeDemoChoice">Maybe later</button>
+                    </div>
+                </div>
+            </transition>
         </div>
     </section>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { Sparkles, ArrowRight, Play } from 'lucide-vue-next';
+
+const isDemoChoiceOpen = ref(false);
 
 const handleGetStarted = () => {
     const el = document.getElementById('pricing');
@@ -95,14 +147,114 @@ const handleGetStarted = () => {
     }
 };
 const handleWatchDemo = () => {
+    isDemoChoiceOpen.value = true;
+};
+
+const closeDemoChoice = () => {
+    isDemoChoiceOpen.value = false;
+};
+
+const openVideoDemo = () => {
+    window.open('https://youtu.be/gqukb-m9fmA', '_blank', 'noopener');
+    isDemoChoiceOpen.value = false;
+};
+
+const viewScreenshots = () => {
     const el = document.getElementById('screenshots');
     if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
     }
+    isDemoChoiceOpen.value = false;
 };
 </script>
 
 <style scoped>
+/* Fade transition for modal overlay */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 250ms ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* Subtle zoom for the modal panel */
+.modal-panel {
+    animation: modal-zoom-in 240ms ease;
+}
+@keyframes modal-zoom-in {
+    0% {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Modal decorative animated background (inspired by AnimatedBackground.vue) */
+.modal-decor {
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem; /* match rounded-2xl */
+    overflow: hidden;
+}
+.modal-gradient {
+    position: absolute;
+    inset: -50%;
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.15), rgba(109, 40, 217, 0.15), rgba(8, 145, 178, 0.15));
+    filter: blur(40px);
+    animation: gradient-shift 16s ease-in-out infinite;
+}
+@keyframes gradient-shift {
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(2%, -2%, 0) rotate(10deg); }
+    100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+.modal-glow {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 9999px;
+    filter: blur(48px);
+    opacity: 0.35;
+    animation: float-slow 14s ease-in-out infinite;
+}
+.modal-glow.glow-1 {
+    top: -60px;
+    left: -40px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.35), transparent 60%);
+    animation-delay: 0.6s;
+}
+.modal-glow.glow-2 {
+    bottom: -60px;
+    right: -40px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.35), transparent 60%);
+    animation-delay: 1.8s;
+}
+@keyframes float-slow {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(14px, -10px, 0); }
+    50% { transform: translate3d(-10px, 8px, 0); }
+    75% { transform: translate3d(10px, 6px, 0); }
+}
+.modal-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px;
+    mask-image: radial-gradient(circle at 70% 30%, rgba(0,0,0,0.9), rgba(0,0,0,0.1) 60%, transparent 70%);
+    animation: grid-fade 8s linear infinite;
+}
+@keyframes grid-fade {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.2; }
+}
+
 /* Floating orbs with colorful glow */
 .floating-orb {
     position: absolute;
